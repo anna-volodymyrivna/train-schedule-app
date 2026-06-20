@@ -1,0 +1,40 @@
+### 1. РЕЄСТРАЦІЯ КОРИСТУВАЧА
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "anya_dev",
+  "email": "anya@example.com",
+  "password": "superPassword123"
+}
+
+###
+
+### 2. ВХІД У СИСТЕМУ (ЛОГІН)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "anya@example.com",
+  "password": "superPassword123"
+}
+
+###
+
+### 3. СТВОРЕННЯ ПЕРШОГО ПОТЯГА
+POST http://localhost:3000/trains
+Content-Type: application/json
+Authorization: Bearer {{anya_dev_token}}
+
+{
+  "number": "064КИ",
+  "fromStation": "Київ",
+  "toStation": "Львів",
+  "departureTime": "2026-06-25T14:30:00.000Z",
+  "arrivalTime": "2026-06-25T21:45:00.000Z"
+}
+
+###
+
+### 4. ОТРИМАННЯ ВСІХ ПОТЯГІВ (РОЗКЛАД)
+GET http://localhost:3000/trains
