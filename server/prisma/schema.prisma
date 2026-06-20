@@ -1,0 +1,24 @@
+datasource db {
+  provider = "postgresql"
+}
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String
+  email    String @unique
+  password String
+  role     String @default("GUEST")
+}
+
+model Train {
+  id            Int      @id @default(autoincrement())
+  number        String
+  fromStation   String
+  toStation     String
+  departureTime DateTime
+  arrivalTime   DateTime
+}
