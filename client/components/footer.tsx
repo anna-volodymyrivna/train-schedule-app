@@ -21,10 +21,9 @@ export default function Footer() {
         <div className="footer-nav">
           <h4>Navigation</h4>
           <ul>
-            <li><Link href="/" style={{color: '#fff'}}>Головна</Link></li>
-            <li><Link href="/login" style={{color: '#fff'}}>Увійти</Link></li>
-            <li><Link href="/register" style={{color: '#fff'}}>Реєстрація</Link></li>
-            <li><Link href="/schedule" style={{color: '#fff'}}>Панель розкладу</Link></li>
+            <li><Link href="/" style={{color: '#fff'}}>Home page</Link></li>
+            <li><Link href="/login" style={{color: '#fff'}}>Sign in</Link></li>
+            <li><Link href="/register" style={{color: '#fff'}}>Sign up</Link></li>
           </ul>
         </div>
 

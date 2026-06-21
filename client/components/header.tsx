@@ -9,8 +9,8 @@ export default function Header() {
     <nav>
         <Link  href="/"><h1>RailPlan <FontAwesomeIcon icon={faTrain}/></h1></Link>
         <div className="nav-button">
-          <button><Link href="/login">Log in</Link></button>
-          <button><Link href="/register">Log out</Link></button>
+          <button><Link href="/login">Sign in</Link></button>
+          <button><Link href="/register">Sign up</Link></button>
         </div>
       </nav>
   );

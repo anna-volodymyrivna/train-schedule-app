@@ -52,10 +52,10 @@ export default function LoginPage() {
           </div>
         </div>
         {error && <p className="error">{error}</p>}
-        <button type="submit" className="login-button">Log In</button>
+        <button type="submit" className="login-button">Sign In</button>
       </form>
       <p className="login-register">
-        Don&apos;t have an account? <b><Link href="/register" style={{ color: '#308d7f', textDecoration: 'none' }}>Register</Link></b>
+        Don&apos;t have an account? <b><Link href="/register" style={{ color: '#308d7f', textDecoration: 'none' }}>Sign up</Link></b>
       </p>
     </div>
   );
