@@ -19,7 +19,14 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
-    return this.prisma.user.create({ data });
+    try {
+      return await this.prisma.user.create({ data });
+    } catch (error) {
+      console.error('Critical database error while creating:', error);
+      throw new ConflictException(
+        'Failed to save user due to database failure',
+      );
+    }
   }
 
   async findByEmail(email: string) {

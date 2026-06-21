@@ -11,13 +11,19 @@ export class AuthService {
 
   async register(body: { username: string; email: string; password: string }) {
     return this.usersService.create({
-      ...body,
+      username: body.username,
+      email: body.email,
+      password: body.password,
       role: 'user',
     });
   }
 
   async login(body: { email: string; password: string }) {
     const user = await this.usersService.findByEmail(body.email);
+
+    if (!user || user.password !== body.password) {
+      throw new UnauthorizedException('Wrong email or password');
+    }
 
     if (!user || user.password !== body.password) {
       throw new UnauthorizedException('Wrong email or password');
