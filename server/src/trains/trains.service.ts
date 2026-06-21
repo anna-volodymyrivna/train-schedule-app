@@ -1,21 +1,50 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+/* eslint-disable */
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateTrainDto } from './dto/create-train.dto';
-import { UpdateTrainDto } from './dto/update-train.dto';
 
 @Injectable()
 export class TrainsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(createTrainDto: CreateTrainDto) {
+  async create(dto: any, userId: number) {
+    const trainNumber = dto.trainNumber;
+    const departureStation = dto.departureStation;
+    const arrivalStation = dto.arrivalStation;
+    const departureTime = dto.departureTime;
+    const arrivalTime = dto.arrivalTime;
+
+    if (!userId) {
+      throw new BadRequestException('User ID is missing from token');
+    }
+
+    const existingTrain = await this.prisma.train.findFirst({
+      where: { trainNumber: String(trainNumber) },
+    });
+
+    if (existingTrain) {
+      throw new BadRequestException('Train with this number already exists');
+    }
+
     return this.prisma.train.create({
       data: {
-        number: createTrainDto.number,
-        fromStation: createTrainDto.fromStation,
-        toStation: createTrainDto.toStation,
-        departureTime: new Date(createTrainDto.departureTime),
-        arrivalTime: new Date(createTrainDto.arrivalTime),
+        trainNumber: String(trainNumber),
+        departureStation: String(departureStation),
+        arrivalStation: String(arrivalStation),
+        departureTime: new Date(departureTime),
+        arrivalTime: new Date(arrivalTime),
+        userId: Number(userId),
       },
+    });
+  }
+
+  async findMyTrains(userId: number) {
+    return this.prisma.train.findMany({
+      where: { userId: userId },
+      orderBy: { departureTime: 'asc' },
     });
   }
 
@@ -27,23 +56,25 @@ export class TrainsService {
 
   async findOne(id: number) {
     const train = await this.prisma.train.findUnique({ where: { id } });
-    if (!train) {
-      throw new NotFoundException(`Train with ID ${id} not found`);
-    }
+    if (!train) throw new NotFoundException('Train not found');
     return train;
   }
 
-  async update(id: number, updateTrainDto: UpdateTrainDto) {
+  async update(id: number, dto: any) {
     await this.findOne(id);
+    const dataObj = dto as Record<string, string>;
+
     return this.prisma.train.update({
       where: { id },
       data: {
-        ...updateTrainDto,
-        departureTime: updateTrainDto.departureTime
-          ? new Date(updateTrainDto.departureTime)
+        trainNumber: dataObj.trainNumber,
+        departureStation: dataObj.departureStation,
+        arrivalStation: dataObj.arrivalStation,
+        departureTime: dataObj.departureTime
+          ? new Date(dataObj.departureTime)
           : undefined,
-        arrivalTime: updateTrainDto.arrivalTime
-          ? new Date(updateTrainDto.arrivalTime)
+        arrivalTime: dataObj.arrivalTime
+          ? new Date(dataObj.arrivalTime)
           : undefined,
       },
     });

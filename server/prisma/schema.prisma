@@ -8,18 +8,21 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
   password String
   username String
-  role     String @default("USER")
+  role     String  @default("USER")
+  trains   Train[]
 }
 
 model Train {
-  id            Int      @id @default(autoincrement())
-  number        String
-  fromStation   String
-  toStation     String
-  departureTime DateTime
-  arrivalTime   DateTime
+  id               Int      @id @default(autoincrement())
+  trainNumber      String   @unique
+  departureStation String
+  arrivalStation   String
+  departureTime    DateTime
+  arrivalTime      DateTime
+  userId           Int
+  createdBy        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

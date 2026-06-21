@@ -1,47 +1,87 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
+
+interface RegisterDto {
+  username?: string;
+  email?: string;
+  password?: string;
+}
+
+interface LoginDto {
+  username?: string;
+  email?: string;
+  password?: string;
+}
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    private prisma: PrismaService,
+    private jwtService: JwtService,
   ) {}
 
-  async register(body: { username: string; email: string; password: string }) {
-    return this.usersService.create({
-      username: body.username,
-      email: body.email,
-      password: body.password,
-      role: 'user',
+  async register(dto: RegisterDto) {
+    if (!dto.email || !dto.password || !dto.username) {
+      throw new BadRequestException('Missing required fields');
+    }
+
+    const candidate = await this.prisma.user.findUnique({
+      where: { email: dto.email },
     });
-  }
 
-  async login(body: { email: string; password: string }) {
-    const user = await this.usersService.findByEmail(body.email);
-
-    if (!user || user.password !== body.password) {
-      throw new UnauthorizedException('Wrong email or password');
+    if (candidate) {
+      throw new BadRequestException('User with this email already exists');
     }
 
-    if (!user || user.password !== body.password) {
-      throw new UnauthorizedException('Wrong email or password');
-    }
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      username: user.username,
-      role: user.role,
-    };
+    const user = await this.prisma.user.create({
+      data: {
+        username: dto.username,
+        email: dto.email,
+        password: hashedPassword,
+        role: 'USER',
+      },
+    });
+
+    const payload = { sub: user.id, email: user.email, role: user.role };
+    const accessToken = this.jwtService.sign(payload);
 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
       user: {
         id: user.id,
-        username: user.username,
         email: user.email,
+        username: user.username,
+        role: user.role,
+      },
+    };
+  }
+
+  async login(dto: LoginDto) {
+    if (!dto.email || !dto.password) {
+      throw new BadRequestException('Email and password are required');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (!user || !(await bcrypt.compare(dto.password, user.password))) {
+      throw new BadRequestException('Invalid email or password');
+    }
+
+    const payload = { sub: user.id, email: user.email, role: user.role };
+    const accessToken = this.jwtService.sign(payload);
+
+    return {
+      access_token: accessToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
         role: user.role,
       },
     };
