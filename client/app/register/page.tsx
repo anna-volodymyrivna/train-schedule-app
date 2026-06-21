@@ -10,6 +10,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -19,16 +20,21 @@ export default function RegisterPage() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
+
     try {
-      await API.post('/auth/register', formData);
-      router.push('/login');
+      const response = await API.post('/auth/register', formData);
+      
+      localStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      window.dispatchEvent(new Event('auth-change'));
+      
+      router.push('/');
     } catch (err) {
       const axiosError = err as { response?: { data?: { message?: string } } };
-      setError(axiosError.response?.data?.message || 'Error during registration');
+      setError(axiosError.response?.data?.message || 'Registration error');
     }
   };
-
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="register-block">

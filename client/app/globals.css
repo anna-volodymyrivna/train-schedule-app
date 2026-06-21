@@ -70,8 +70,8 @@ nav h1:hover {
 .nav-button {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 15px;
-  max-width: 200px;
 }
 
 .nav-button button {
@@ -79,8 +79,11 @@ nav h1:hover {
   border-radius: 20px;
   border: none;
   background-color: var(--button-color);
+  color: #ddd;
   cursor: pointer;
   transition: transform 300ms ease;
+  display: flex;
+  gap: 5px;
 }
 
 .nav-button button a {
@@ -90,6 +93,11 @@ nav h1:hover {
 
 .nav-button button:hover {
   transform: scale(1.07);
+}
+
+.username {
+  color: white;
+  font-size: 14px;
 }
 
 .main h3 {
@@ -270,6 +278,53 @@ nav h1:hover {
   text-align: center;
   font-size: 14px;
   color: #94a3b8;
+}
+
+.login-block.train {
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.login-block.train form {
+  margin-bottom: 40px;
+}
+
+.train-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.login-block.train p {
+  color: #999;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-block.train table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #fff;
+}
+
+.login-block.train table tr {
+  border-bottom: 2px solid #308d7f;
+  text-align: left;
+}
+
+.login-block.train table th,
+.login-block.train table td {
+  padding: 10px;
+}
+
+.login-block.train table tbody tr {
+  border-bottom: 1px solid #222;
+}
+
+.login-block.train table tbody tr td:first-child {
+  font-weight: 600;
+  color: #377765;
 }
 
 footer {

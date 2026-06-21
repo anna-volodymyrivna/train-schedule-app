@@ -5,13 +5,17 @@ import API from './api/axio.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-  interface Train {
+interface Train {
   id: number;
   number: string;
   fromStation: string;
   toStation: string;
   departureTime: string;
   arrivalTime: string;
+  
+  trainNumber?: string;
+  departureStation?: string;
+  arrivalStation?: string;
 }
 
 export default function HomePage() {
@@ -46,11 +50,15 @@ export default function HomePage() {
     };
   }, []);
 
-  const filteredTrains = trains.filter((train) => {
-    const matchesFrom = train.fromStation.toLowerCase().includes(searchFrom.toLowerCase());
-    const matchesTo = train.toStation.toLowerCase().includes(searchTo.toLowerCase());
-    return matchesFrom && matchesTo;
-  });
+  const filteredTrains = trains ? trains.filter((train: Train) => {
+  const trainFrom = train?.fromStation ? String(train.fromStation).toLowerCase() : '';
+  const trainTo = train?.toStation ? String(train.toStation).toLowerCase() : '';
+  
+  const queryFrom = typeof searchFrom !== 'undefined' ? searchFrom.toLowerCase() : '';
+  const queryTo = typeof searchTo !== 'undefined' ? searchTo.toLowerCase() : '';
+
+  return trainFrom.includes(queryFrom) && trainTo.includes(queryTo);
+}) : [];
 
   return (
     <div className="body">
@@ -90,9 +98,9 @@ export default function HomePage() {
               <div key={train.id} className="train-card">
                 <div>
                   <span className="train-number">
-                    № {train.number}
+                    № {train.trainNumber || train.number}
                   </span>
-                  <h4>{train.fromStation} <FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon> {train.toStation}</h4>
+                  <h4>{train.departureStation || train.fromStation} <FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon> {train.arrivalStation || train.toStation}</h4>
                 </div>
                 <div className="train-info">
                   <p><strong>Outbound:</strong> {new Date(train.departureTime).toLocaleString('uk-UA')}</p>

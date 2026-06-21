@@ -10,6 +10,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,22 +18,23 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setError('');
+    e.preventDefault();
+    setError('');
 
-  try {
-    const response = await API.post('/auth/login', formData);
-    
-    localStorage.setItem('token', response.data.access_token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
-    router.push('/schedule');
-  } catch (err) {
-    const axiosError = err as { response?: { data?: { message?: string } } };
-    setError(axiosError.response?.data?.message || 'Authorization error');
-  }
-};
-
-  const [showPassword, setShowPassword] = useState(false);
+    try {
+      const response = await API.post('/auth/login', formData);
+      
+      localStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      window.dispatchEvent(new Event('auth-change'));
+      
+      router.push('/');
+    } catch (err) {
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      setError(axiosError.response?.data?.message || 'Authorization error');
+    }
+  };
 
   return (
     <div className="login-block">
