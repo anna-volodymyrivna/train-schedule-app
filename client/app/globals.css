@@ -9,6 +9,17 @@
   --icon-color: #FAD20C;
 }
 
+.error {
+  color: #ef4444;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+main {
+  flex: 1;
+}
+
 body {
   font-family: "Montserrat", sans-serif;
   background-color: var(--primary-color);
@@ -25,6 +36,10 @@ body {
 
 h1 {
   color: var(--icon-color);
+}
+
+h2 {
+  color: #fff;
 }
 
 a {
@@ -166,6 +181,86 @@ nav h1:hover {
 
 .train-info p {
   font-size: 14px;
+}
+
+.login-block {
+  max-width: 400px;
+  width: 100%;
+  margin: 80px auto;
+  padding: 30px;
+  background-color: var(--secondary-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.login-block h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.login-block form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-block form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.login-block form input {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.login-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-password button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--button-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 300ms ease;
+}
+
+.login-button:hover {
+  transform: scale(1.02);
+}
+
+.login-register {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #94a3b8;
 }
 
 footer {
