@@ -68,7 +68,6 @@ export default function Header() {
           <>
             <span className="username">
               {user.username}{" "}
-              {isAdmin && <small>(Admin)</small>}
             </span>
             {isAdmin && (
               <button>
@@ -79,7 +78,7 @@ export default function Header() {
               <Link href="/my-train">Create Train</Link>
             </button>
             <button onClick={handleLogout}>
-              Log out <FontAwesomeIcon icon={faArrowRightFromBracket} />
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button>
           </>
         ) : (

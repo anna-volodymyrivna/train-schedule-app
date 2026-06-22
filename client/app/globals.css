@@ -4,9 +4,14 @@
   margin: 0;
   padding: 0;
   --primary-color: #081929;
-  --secondary-color: #2F434C;
+  --secondary-color: #2f434c;
   --button-color: #387676;
-  --icon-color: #FAD20C;
+  --icon-color: #fad20c;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(100%);
+  cursor: pointer;
 }
 
 .error {
@@ -22,16 +27,28 @@
   color: #fff;
 }
 
-main {
+main, 
+.body,
+#root,
+body > div:first-of-type {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
   font-family: "Montserrat", sans-serif;
   background-color: var(--primary-color);
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
+  position: relative;
+  box-sizing: border-box;
+  padding-bottom: 240px; 
+}
+
+main, .body {
+  display: block;
+  height: auto;
+  min-height: 0;
 }
 
 .body {
@@ -62,7 +79,7 @@ nav {
   align-items: center;
   padding: 20px 40px;
   background-color: var(--secondary-color);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 nav h1 {
@@ -107,10 +124,6 @@ nav h1:hover {
   font-size: 14px;
 }
 
-.username small {
-  color: var(--icon-color);
-}
-
 .main h3 {
   margin-bottom: 20px;
   color: #fff;
@@ -127,7 +140,7 @@ nav h1:hover {
   color: #fff;
   padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
 }
 
@@ -172,11 +185,10 @@ nav h1:hover {
   color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   gap: 15px;
 }
 
@@ -211,7 +223,7 @@ nav h1:hover {
   padding: 30px;
   background-color: var(--secondary-color);
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .login-block h2,
@@ -356,7 +368,6 @@ nav h1:hover {
 
 .admin-block h1 {
   text-align: center;
-
 }
 
 .admin-form {
@@ -540,8 +551,12 @@ nav h1:hover {
 footer {
   background-color: var(--secondary-color);
   color: #fff;
-  margin-top: auto;
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .footer {
@@ -650,4 +665,137 @@ footer h4 {
   text-align: center;
   font-size: 12px;
   color: #999;
+}
+
+@media (max-width: 768px) {
+
+  body {
+    padding-bottom: 450px;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 15px;
+  }
+
+  nav h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .username {
+    font-size: 14px;
+    margin-top: 2px;
+    width: auto;
+    text-align: center;
+  }
+
+  .nav-button {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .nav-button button {
+    padding: 8px 14px;
+    border-radius: 16px;
+    white-space: nowrap;
+  }
+
+  .nav-button button a {
+    font-size: 12px;
+  }
+
+  .login-block.train {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  .login-block.train h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .train-form {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .login-block.train form {
+    margin-bottom: 25px;
+    gap: 15px;
+  }
+
+  .login-block.train table {
+    margin-top: 15px;
+  }
+
+  .login-block.train table th,
+  .login-block.train table td {
+    padding: 6px 4px;
+    font-size: 11px;
+    word-break: break-word;
+  }
+
+  .login-block.train table th {
+    font-size: 12px;
+  }
+
+  .admin-block {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  .admin-block h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .admin-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-form form div {
+    width: 100%;
+  }
+
+  .admin-block > div:last-of-type {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 6px;
+    margin-top: 15px;
+  }
+
+  .admin-block table {
+    min-width: 600px;
+    margin-top: 0;
+  }
+
+  .admin-block table th,
+  .admin-block table tr td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+
+  .admin-action {
+    gap: 8px;
+  }
+
+  .admin-action button {
+    min-width: 60px;
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
 }
