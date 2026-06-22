@@ -65,52 +65,68 @@ export default function HomePage() {
       <div className="main">
         <div className="searching-block">
           <div className="searching">
-          <h3>Searching for train</h3>
-          <div className="search-form">
-            <form>
-              <label>From:</label>
-              <input 
-                type="text" 
-                placeholder="Example, Kyiv" 
-                value={searchFrom} 
-                onChange={(e) => setSearchFrom(e.target.value)}
-              />
-            </form>
-            <form>
-              <label>To:</label>
-              <input 
-                type="text" 
-                placeholder="Example, Lviv" 
-                value={searchTo} 
-                onChange={(e) => setSearchTo(e.target.value)}
-              />
-            </form>
+            <h3>Searching for train</h3>
+            <div className="search-form">
+              <form>
+                <label>From:</label>
+                <input
+                  type="text"
+                  placeholder="Example, Kyiv"
+                  value={searchFrom}
+                  onChange={(e) => setSearchFrom(e.target.value)}
+                />
+              </form>
+              <form>
+                <label>To:</label>
+                <input
+                  type="text"
+                  placeholder="Example, Lviv"
+                  value={searchTo}
+                  onChange={(e) => setSearchTo(e.target.value)}
+                />
+              </form>
+            </div>
+          </div>
+          <h3>Trains available upon request ({filteredTrains.length})</h3>
+          <div className="trains-schedule">
+            {loading ? (
+              <p style={{ fontStyle: "italic" }}>
+                Download the current schedule...
+              </p>
+            ) : filteredTrains.length === 0 ? (
+              <p style={{ fontStyle: "italic" }}>
+                No trains were found on this route.
+              </p>
+            ) : (
+              <div className="trains-block">
+                {filteredTrains.map((train) => (
+                  <div key={train.id} className="train-card">
+                    <div>
+                      <span className="train-number">
+                        № {train.trainNumber || train.number}
+                      </span>
+                      <h4>
+                        {train.departureStation || train.fromStation}{" "}
+                        <FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon>{" "}
+                        {train.arrivalStation || train.toStation}
+                      </h4>
+                    </div>
+                    <div className="train-info">
+                      <p>
+                        <strong>Outbound:</strong>{" "}
+                        {new Date(train.departureTime).toLocaleString("uk-UA")}
+                      </p>
+                      <p>
+                        <strong>Arrival:</strong>{" "}
+                        {new Date(train.arrivalTime).toLocaleString("uk-UA")}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-        <h3>Trains available upon request ({filteredTrains.length})</h3>
-        {loading ? (
-          <p style={{ fontStyle: 'italic' }}>Download the current schedule...</p>
-        ) : filteredTrains.length === 0 ? (
-          <p style={{ fontStyle: 'italic' }}>No trains were found on this route.</p>
-        ) : (
-          <div className="trains-block">
-            {filteredTrains.map((train) => (
-              <div key={train.id} className="train-card">
-                <div>
-                  <span className="train-number">
-                    № {train.trainNumber || train.number}
-                  </span>
-                  <h4>{train.departureStation || train.fromStation} <FontAwesomeIcon icon={faArrowRight}></FontAwesomeIcon> {train.arrivalStation || train.toStation}</h4>
-                </div>
-                <div className="train-info">
-                  <p><strong>Outbound:</strong> {new Date(train.departureTime).toLocaleString('uk-UA')}</p>
-                  <p><strong>Arrival:</strong> {new Date(train.arrivalTime).toLocaleString('uk-UA')}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
       </div>
     </div>
   );

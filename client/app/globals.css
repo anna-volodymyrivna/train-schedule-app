@@ -42,7 +42,6 @@ body {
   min-height: 100vh;
   position: relative;
   box-sizing: border-box;
-  padding-bottom: 240px; 
 }
 
 main, .body {
@@ -172,6 +171,18 @@ nav h1:hover {
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
+}
+
+.trains-schedule {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 500px;
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #377765 #35404c;
 }
 
 .trains-block {
@@ -620,9 +631,6 @@ footer {
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
-  position: absolute;
-  bottom: 0;
-  left: 0;
 }
 
 .footer {
@@ -734,11 +742,6 @@ footer h4 {
 }
 
 @media (max-width: 768px) {
-
-  body {
-    padding-bottom: 450px;
-  }
-
   nav {
     flex-direction: column;
     align-items: center;
@@ -811,6 +814,10 @@ footer h4 {
 
   .login-block.train table th {
     font-size: 12px;
+  }
+
+  .trains-schedule {
+    height: 500px;
   }
 
   .admin-block {
