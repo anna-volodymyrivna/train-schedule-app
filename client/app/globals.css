@@ -16,6 +16,12 @@
   justify-content: center;
 }
 
+.loading {
+  padding: 8px;
+  text-align: center;
+  color: #fff;
+}
+
 main {
   flex: 1;
 }
@@ -84,6 +90,7 @@ nav h1:hover {
   transition: transform 300ms ease;
   display: flex;
   gap: 5px;
+  font-size: 15px;
 }
 
 .nav-button button a {
@@ -98,6 +105,10 @@ nav h1:hover {
 .username {
   color: white;
   font-size: 14px;
+}
+
+.username small {
+  color: var(--icon-color);
 }
 
 .main h3 {
@@ -192,7 +203,8 @@ nav h1:hover {
 }
 
 .login-block,
-.register-block {
+.register-block,
+.admin-block {
   max-width: 400px;
   width: 100%;
   margin: 80px auto;
@@ -211,14 +223,18 @@ nav h1:hover {
 }
 
 .login-block form,
-.register-block form {
+.register-block form,
+.admin-block form,
+.modal-content form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
 .login-block form label,
-.register-block form label {
+.register-block form label,
+.admin-block form label,
+.modal-content form label {
   display: block;
   margin-bottom: 8px;
   font-size: 14px;
@@ -226,7 +242,9 @@ nav h1:hover {
 }
 
 .login-block form input,
-.register-block form input {
+.register-block form input,
+.admin-block form input,
+.modal-content form input {
   width: 100%;
   padding: 10px;
   background-color: var(--primary-color);
@@ -280,7 +298,8 @@ nav h1:hover {
   color: #94a3b8;
 }
 
-.login-block.train {
+.login-block.train,
+.admin-block {
   max-width: 800px;
   margin: 40px auto;
 }
@@ -301,30 +320,221 @@ nav h1:hover {
   margin-top: 20px;
 }
 
-.login-block.train table {
+.login-block.train table,
+.admin-block table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
   color: #fff;
 }
 
-.login-block.train table tr {
+.login-block.train table tr,
+.admin-block table tr {
   border-bottom: 2px solid #308d7f;
   text-align: left;
 }
 
 .login-block.train table th,
-.login-block.train table td {
+.login-block.train table td,
+.admin-block table th,
+.admin-block table tr td {
   padding: 10px;
+}
+
+.login-block.train table th,
+.admin-block table th {
+  text-align: center;
 }
 
 .login-block.train table tbody tr {
   border-bottom: 1px solid #222;
 }
 
-.login-block.train table tbody tr td:first-child {
-  font-weight: 600;
-  color: #377765;
+.admin-block {
+  max-width: 1152px;
+}
+
+.admin-block h1 {
+  text-align: center;
+
+}
+
+.admin-form {
+  margin: 20px 0;
+}
+
+.admin-action {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.admin-action button {
+  min-width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.2s;
+}
+
+.edit {
+  background-color: #2563eb;
+}
+
+.edit:hover {
+  background-color: #1d4ed8;
+}
+
+.delete-btn {
+  background-color: #dc2626;
+}
+
+.delete-btn:hover {
+  background-color: #b91c1c;
+}
+
+.train-error {
+  text-align: center;
+  padding: 24px;
+  color: #9ca3af;
+}
+
+.no-data-cell {
+  color: #999;
+  text-align: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background-color: var(--secondary-color);
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  border: none;
+  color: #ffffff;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--icon-color);
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+  color: #fff;
+  transition: transform 300ms ease;
+}
+
+.cancel-btn {
+  background-color: #475569;
+}
+
+.save-btn {
+  background-color: var(--button-color);
+}
+
+.cancel-btn:hover,
+.save-btn:hover {
+  transform: scale(1.07);
+}
+
+.status-modal {
+  text-align: center;
+  max-width: 350px !important;
+}
+
+.status-icon-container {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.icon-success {
+  color: #22c55e;
+}
+
+.icon-error {
+  color: #ef4444;
+}
+
+.title-success {
+  color: #22c55e;
+  margin: 0 0 8px 0;
+}
+
+.title-error {
+  color: #ef4444;
+  margin: 0 0 8px 0;
+}
+
+.status-text {
+  color: #cbd5e1;
+  font-size: 15px;
+  margin: 0 0 20px 0;
+}
+
+.status-btn-container {
+  justify-content: center !important;
+  margin-top: 0 !important;
+}
+
+.icon-confirm {
+  color: #f59e0b;
+}
+
+.title-confirm {
+  color: #f59e0b;
+  margin: 0 0 8px 0;
+}
+
+.cancel {
+  background-color: #475569;
+  transition: background-color 0.2s;
+}
+
+.delete {
+  background-color: #dc2626;
+  transition: background-color 0.2s;
+}
+
+.cancel:hover {
+  background-color: rgb(82, 92, 107);
+}
+
+.delete:hover {
+  background-color: #b91c1c;
 }
 
 footer {

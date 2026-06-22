@@ -25,8 +25,9 @@ export class JwtAuthGuard implements CanActivate {
         throw new UnauthorizedException('Invalid token format');
       }
 
-      const jwt: any = this.jwtService;
-      const payload = jwt.verify(token);
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET || 'SECRET',
+      });
 
       request.user = {
         id: payload.sub || payload.id,
@@ -35,7 +36,8 @@ export class JwtAuthGuard implements CanActivate {
       };
 
       return true;
-    } catch {
+    } catch (err) {
+      console.error('JWT Verification Error:', err);
       throw new UnauthorizedException('Invalid token or session expired');
     }
   }

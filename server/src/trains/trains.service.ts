@@ -3,6 +3,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  ForbiddenException
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -60,28 +61,31 @@ export class TrainsService {
     return train;
   }
 
-  async update(id: number, dto: any) {
-    await this.findOne(id);
-    const dataObj = dto as Record<string, string>;
+  async update(id: number, updateTrainDto: any, user: any) {
+    const train = await this.prisma.train.findUnique({ where: { id } });
+    if (!train) {
+      throw new NotFoundException('Train not found');
+    }
+
+    if (user.role !== 'ADMIN' && train.userId !== user.id) {
+      throw new ForbiddenException('You can only update your own trains');
+    }
 
     return this.prisma.train.update({
       where: { id },
-      data: {
-        trainNumber: dataObj.trainNumber,
-        departureStation: dataObj.departureStation,
-        arrivalStation: dataObj.arrivalStation,
-        departureTime: dataObj.departureTime
-          ? new Date(dataObj.departureTime)
-          : undefined,
-        arrivalTime: dataObj.arrivalTime
-          ? new Date(dataObj.arrivalTime)
-          : undefined,
-      },
+      data: updateTrainDto,
     });
   }
 
-  async remove(id: number) {
-    await this.findOne(id);
+  async remove(id: number, user: any) {
+    const train = await this.prisma.train.findUnique({ where: { id } });
+    if (!train) {
+      throw new NotFoundException('Train not found');
+    }
+    if (user.role !== 'ADMIN' && train.userId !== user.id) {
+      throw new ForbiddenException('You can only delete your own trains');
+    }
+
     return this.prisma.train.delete({ where: { id } });
   }
 }

@@ -1,31 +1,33 @@
 "use client";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrain, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTrain,
+  faArrowRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface User {
   username: string;
   email: string;
-  role: 'USER' | 'ADMIN';
+  role: string;
 }
 
 export default function Header() {
   const router = useRouter();
-
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const checkAuth = () => {
-      const storedUser = localStorage.getItem('user');
-      
+      const storedUser = localStorage.getItem("user");
+
       if (storedUser && storedUser !== "undefined") {
         try {
           setUser(JSON.parse(storedUser));
         } catch (e) {
-          console.error('Error parsing user data', e);
+          console.error("Error parsing user data", e);
           setUser(null);
         }
       } else {
@@ -35,22 +37,24 @@ export default function Header() {
 
     checkAuth();
 
-    window.addEventListener('auth-change', checkAuth);
-    window.addEventListener('storage', checkAuth);
+    window.addEventListener("auth-change", checkAuth);
+    window.addEventListener("storage", checkAuth);
 
     return () => {
-      window.removeEventListener('auth-change', checkAuth);
-      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener("auth-change", checkAuth);
+      window.removeEventListener("storage", checkAuth);
     };
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
-    router.push('/');
+    router.push("/");
     router.refresh();
   };
+
+  const isAdmin = user?.role && String(user.role).toLowerCase() === "admin";
 
   return (
     <nav>
@@ -63,21 +67,29 @@ export default function Header() {
         {user ? (
           <>
             <span className="username">
-              {user.username}
+              {user.username}{" "}
+              {isAdmin && <small>(Admin)</small>}
             </span>
+            {isAdmin && (
+              <button>
+                <Link href="/admin">Admin Panel</Link>
+              </button>
+            )}
             <button>
-              <Link href={user.role === 'ADMIN' ? '/admin/train' : '/my-train'}>
-                {user.role === 'ADMIN' ? 'Admin Panel' : 'Create Train'}
-              </Link>
+              <Link href="/my-train">Create Train</Link>
             </button>
             <button onClick={handleLogout}>
-              Log out<FontAwesomeIcon icon={faArrowRightFromBracket} />
+              Log out <FontAwesomeIcon icon={faArrowRightFromBracket} />
             </button>
           </>
         ) : (
           <>
-            <button><Link href="/login">Sign in</Link></button>
-            <button><Link href="/register">Sign up</Link></button>
+            <button>
+              <Link href="/login">Sign in</Link>
+            </button>
+            <button>
+              <Link href="/register">Sign up</Link>
+            </button>
           </>
         )}
       </div>
