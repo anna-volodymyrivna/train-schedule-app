@@ -8,12 +8,24 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  username String
-  role     String  @default("USER")
-  trains   Train[]
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  username          String   @unique
+  password          String
+  role              Role     @default(USER)
+  
+  isVerified        Boolean  @default(false)
+  verificationToken String?  @unique
+
+  trains            Train[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Train {

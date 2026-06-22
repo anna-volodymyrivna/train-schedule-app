@@ -1,7 +1,15 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { MailService } from '../mail/mail.service';
 import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
 
 interface RegisterDto {
   username?: string;
@@ -20,6 +28,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -27,14 +36,21 @@ export class AuthService {
       throw new BadRequestException('Missing required fields');
     }
 
-    const candidate = await this.prisma.user.findUnique({
+    const emailExists = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
-
-    if (candidate) {
-      throw new BadRequestException('User with this email already exists');
+    if (emailExists) {
+      throw new ConflictException('User with this email already exists');
     }
 
+    const usernameExists = await this.prisma.user.findUnique({
+      where: { username: dto.username },
+    });
+    if (usernameExists) {
+      throw new ConflictException('This username is already taken');
+    }
+
+    const verificationToken = crypto.randomBytes(32).toString('hex');
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
     const user = await this.prisma.user.create({
@@ -43,19 +59,26 @@ export class AuthService {
         email: dto.email,
         password: hashedPassword,
         role: 'USER',
+        verificationToken,
       },
     });
 
-    const payload = { sub: user.id, email: user.email, role: user.role };
-    const accessToken = this.jwtService.sign(payload);
+    try {
+      await this.mailService.sendVerificationEmail(
+        user.email,
+        verificationToken,
+      );
+    } catch (error) {
+      console.error('Mail sending failed:', error);
+    }
 
     return {
-      access_token: accessToken,
+      message:
+        'Registration successful! Please check your email to verify your account.',
       user: {
         id: user.id,
         email: user.email,
         username: user.username,
-        role: user.role,
       },
     };
   }
@@ -73,6 +96,12 @@ export class AuthService {
       throw new BadRequestException('Invalid email or password');
     }
 
+    if (!user.isVerified) {
+      throw new ForbiddenException(
+        'Please verify your email address before logging in.',
+      );
+    }
+
     const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken = this.jwtService.sign(payload);
 
@@ -85,5 +114,29 @@ export class AuthService {
         role: user.role,
       },
     };
+  }
+
+  async verifyEmail(token: string) {
+    if (!token) {
+      throw new BadRequestException('Verification token is required');
+    }
+
+    const user = await this.prisma.user.findFirst({
+      where: { verificationToken: token },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Invalid or expired verification token');
+    }
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        isVerified: true,
+        verificationToken: null,
+      },
+    });
+
+    return { message: 'Email verified successfully! You can now log in.' };
   }
 }

@@ -1,14 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { TrainsModule } from './trains/trains.module';
-import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { TrainsModule } from './trains/trains.module';
 
 @Module({
-  imports: [PrismaModule, TrainsModule, UsersModule, AuthModule],
-  controllers: [AppController],
-  providers: [AppService],
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, TrainsModule],
 })
 export class AppModule {}
